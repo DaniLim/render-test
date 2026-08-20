@@ -185,3 +185,17 @@ footer {
 }
 
 .dot { opacity: 0.5; }
+
+.sparkle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1.2rem;
+  transform: translate(-50%, -50%);
+  animation: sparkle-pop 0.6s ease-out forwards;
+  z-index: 10;
+}
+
+@keyframes sparkle-pop {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
+  100% { opacity: 0; transform: translate(-50%, -140%) scale(1.4); }
+}

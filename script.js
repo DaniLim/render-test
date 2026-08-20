@@ -90,3 +90,16 @@ function updateClock() {
 }
 updateClock();
 setInterval(updateClock, 1000);
+
+// Click sparkles
+const card = document.querySelector('.card');
+card.addEventListener('click', (e) => {
+  if (e.target.closest('button')) return;
+  const sparkle = document.createElement('span');
+  sparkle.className = 'sparkle';
+  sparkle.textContent = '✨';
+  sparkle.style.left = `${e.clientX}px`;
+  sparkle.style.top = `${e.clientY}px`;
+  document.body.appendChild(sparkle);
+  sparkle.addEventListener('animationend', () => sparkle.remove());
+});
