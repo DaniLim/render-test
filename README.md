@@ -13,6 +13,8 @@ Features:
 - A small click counter
 - A live clock
 - A backend status indicator that pings the .NET API's `/health` endpoint
+- A shared visit counter, incremented server-side on load
+- A guestbook that reads and writes real data through the backend API
 
 ### Local preview
 
@@ -28,6 +30,12 @@ Endpoints:
 - `GET /` – hello message
 - `GET /health` – health check
 - `GET /api/hello?name=...` – greeting with timestamp
+- `GET /api/visits` – current visit count
+- `POST /api/visits` – increment and return the visit count
+- `GET /api/guestbook` – list guestbook entries, newest first
+- `POST /api/guestbook` – add an entry, body `{ "name": "...", "message": "..." }`
+
+Guestbook and visit data are stored in memory and reset whenever the backend restarts or redeploys (there's no database yet).
 
 ### Local run
 

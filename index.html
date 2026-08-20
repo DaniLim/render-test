@@ -28,6 +28,19 @@
       <span id="backend-text">checking backend…</span>
     </div>
 
+    <section class="guestbook">
+      <h2>Guestbook <span class="visit-badge">👀 <span id="visit-count">–</span> visits</span></h2>
+
+      <form id="guestbook-form">
+        <input id="gb-name" type="text" placeholder="Your name (optional)" maxlength="40">
+        <textarea id="gb-message" placeholder="Leave a note…" maxlength="280" required></textarea>
+        <button type="submit">Sign guestbook</button>
+      </form>
+      <p id="gb-error" class="gb-error"></p>
+
+      <ul id="guestbook-list" class="guestbook-list"></ul>
+    </section>
+
     <footer>
       <span id="clock">--:--:--</span>
       <span class="dot">•</span>

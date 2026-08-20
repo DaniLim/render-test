@@ -63,7 +63,7 @@ document.getElementById('dec').addEventListener('click', () => {
 // Backend status check
 // Set this to your deployed .NET backend URL (or leave for localhost during dev).
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:5080'
+  ? 'http://localhost:8080'
   : 'https://render-test-backend-n0e3.onrender.com';
 
 const backendDot = document.getElementById('backend-dot');
@@ -82,6 +82,82 @@ fetch(`${API_BASE}/health`)
     backendDot.classList.add('offline');
     backendText.textContent = 'backend offline';
   });
+
+// Visit counter (shared, backed by the .NET API)
+const visitCountEl = document.getElementById('visit-count');
+fetch(`${API_BASE}/api/visits`, { method: 'POST' })
+  .then((res) => res.json())
+  .then((data) => { visitCountEl.textContent = data.visits; })
+  .catch(() => { visitCountEl.textContent = '?'; });
+
+// Guestbook
+const gbForm = document.getElementById('guestbook-form');
+const gbNameInput = document.getElementById('gb-name');
+const gbMessageInput = document.getElementById('gb-message');
+const gbError = document.getElementById('gb-error');
+const gbList = document.getElementById('guestbook-list');
+
+function timeAgo(isoString) {
+  const seconds = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderGuestbook(entries) {
+  if (!entries.length) {
+    gbList.innerHTML = '<li class="gb-empty">No messages yet — be the first to sign!</li>';
+    return;
+  }
+  gbList.innerHTML = entries.map((e) => `
+    <li>
+      <div class="gb-meta"><span>${escapeHtml(e.name)}</span><span>${timeAgo(e.createdAt)}</span></div>
+      <div>${escapeHtml(e.message)}</div>
+    </li>
+  `).join('');
+}
+
+function loadGuestbook() {
+  return fetch(`${API_BASE}/api/guestbook`)
+    .then((res) => res.json())
+    .then(renderGuestbook)
+    .catch(() => {
+      gbList.innerHTML = '<li class="gb-empty">Couldn\'t reach the backend.</li>';
+    });
+}
+
+gbForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  gbError.textContent = '';
+
+  fetch(`${API_BASE}/api/guestbook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: gbNameInput.value, message: gbMessageInput.value }),
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || 'Something went wrong.');
+      }
+      gbMessageInput.value = '';
+      return loadGuestbook();
+    })
+    .catch((err) => {
+      gbError.textContent = err.message;
+    });
+});
+
+loadGuestbook();
 
 // Live clock
 const clockEl = document.getElementById('clock');
