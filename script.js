@@ -64,7 +64,7 @@ document.getElementById('dec').addEventListener('click', () => {
 // Set this to your deployed .NET backend URL (or leave for localhost during dev).
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:5080'
-  : 'https://render-test-backend.onrender.com'; // update after the backend is deployed
+  : 'https://render-test-backend-n0e3.onrender.com';
 
 const backendDot = document.getElementById('backend-dot');
 const backendText = document.getElementById('backend-text');
