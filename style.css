@@ -152,6 +152,27 @@ button:active { transform: scale(0.95); }
   min-width: 2.5ch;
 }
 
+.backend-status {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.dot-indicator {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #888;
+  transition: background 0.2s ease;
+}
+
+.dot-indicator.online { background: var(--accent-3); box-shadow: 0 0 8px var(--accent-3); }
+.dot-indicator.offline { background: #ff5c5c; box-shadow: 0 0 8px #ff5c5c; }
+
 footer {
   margin-top: 34px;
   font-size: 0.8rem;

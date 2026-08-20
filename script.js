@@ -60,6 +60,29 @@ document.getElementById('dec').addEventListener('click', () => {
   countEl.textContent = --count;
 });
 
+// Backend status check
+// Set this to your deployed .NET backend URL (or leave for localhost during dev).
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5080'
+  : 'https://render-test-backend.onrender.com'; // update after the backend is deployed
+
+const backendDot = document.getElementById('backend-dot');
+const backendText = document.getElementById('backend-text');
+
+fetch(`${API_BASE}/health`)
+  .then((res) => {
+    if (!res.ok) throw new Error('bad response');
+    return res.json();
+  })
+  .then(() => {
+    backendDot.classList.add('online');
+    backendText.textContent = 'backend online';
+  })
+  .catch(() => {
+    backendDot.classList.add('offline');
+    backendText.textContent = 'backend offline';
+  });
+
 // Live clock
 const clockEl = document.getElementById('clock');
 function updateClock() {
